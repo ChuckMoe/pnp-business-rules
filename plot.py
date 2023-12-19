@@ -1,7 +1,13 @@
+import logging
+import os
+from random import randint
+
 import pandas as pd
 import plotly.graph_objects as go
-import sys
 from plotly.subplots import make_subplots
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 keys = ['revenue', 'expenses', 'products_quality', 'products_quantity', 'renown', 'competition', 'money']
 
@@ -41,4 +47,18 @@ def plot(filename: str):
 
 
 if __name__ == '__main__':
-    plot(sys.argv[1])
+    r = False
+    r_number = 20
+    filename = ""
+    for root, _, files in os.walk('data'):
+        if r:
+            rs = [randint(0, len(files)) for _ in range(r_number)]
+            for i in rs:
+                logger.info(files[i])
+                plot(os.path.join(root, files[i]))
+        else:
+            if filename == "":
+                for file in files:
+                    plot(os.path.join(root, file))
+            else:
+                plot(os.path.join(root, filename))
